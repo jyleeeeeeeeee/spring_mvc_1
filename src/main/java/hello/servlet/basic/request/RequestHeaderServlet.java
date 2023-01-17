@@ -46,7 +46,7 @@ public class RequestHeaderServlet extends HttpServlet {
         }
 
         */
-        request.getHeaderNames().asIterator().forEachRemaining(headerName -> System.out.println(headerName + ": " + request.getHeader(headerName)));
+        request.getHeaderNames().asIterator().forEachRemaining(headerName -> System.out.println("headerName: " + headerName));
         System.out.println("--- Headers - end ---");
         System.out.println();
     }

@@ -29,10 +29,10 @@ public class FrontControllerServletV5 extends HttpServlet {
 
     public FrontControllerServletV5() {
         initHandlerMappingMap();
-        inithHandlerAdapters();
+        initHandlerAdapters();
     }
 
-    private void inithHandlerAdapters() {
+    private void initHandlerAdapters() {
         handlerAdapters.add(new ControllerV3HandlerAdapter());
         handlerAdapters.add(new ControllerV4HandlerAdapter());
     }
@@ -59,15 +59,23 @@ public class FrontControllerServletV5 extends HttpServlet {
 
         // ControllerV4HandlerAdapter
         MyHandlerAdapter adapter = getHandlerAdapter(handler);
+
+        // 3. handle(handler)
+        // 4. ControllerV3HandlerAdapter.handle() || ControllerV4HandlerAdapter.handle()
+        // 5. ModelAndView 반환
         ModelView mv = adapter.handle(request, response, handler);
 
         MyView view = viewResolver(mv.getViewName());
+
+        // 8. render(model) 호출
         view.render(mv.getModel(), request, response);
 
     }
 
     private MyHandlerAdapter getHandlerAdapter(Object handler) {
         // MemberFormControllerV4
+
+        // 2. 핸들러를 처리할 수 있는 핸들러 어댑터 조회
         for (MyHandlerAdapter adapter : handlerAdapters) {
             if (adapter.supports(handler)) {
                 // ControllerV3HandlerAdapter
@@ -79,10 +87,14 @@ public class FrontControllerServletV5 extends HttpServlet {
 
     private Object getHandler(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
+
+        // 1. 핸들러 조회
         return handlerMappingMap.get(requestURI);
     }
 
+    // 6.viewResolver 호출
     private MyView viewResolver(String viewName) {
+        // 7. View 반환
         return new MyView("/WEB-INF/views/" + viewName + ".jsp");
     }
 }
